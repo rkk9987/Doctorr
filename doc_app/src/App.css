@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* .outfit-uni {
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+} */
+
+:root {
+  --primary: #5f6fff;
+  --secondary: #ff5733;
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* .active hr {
+  width: 100%;
+  border: 1px solid darkslategray;
+} */
+
+::-webkit-scrollbar {
+  @apply hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
