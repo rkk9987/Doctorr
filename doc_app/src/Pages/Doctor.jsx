@@ -4,7 +4,7 @@ import { AppContext } from "../context/AppContext";
 const Doctor = () => {
   const { speciality } = useParams();
 
-  const { doctors } = useContext(AppContext);
+  const { doctor, getAllDoctor } = useContext(AppContext);
 
   const [filterDoc, setFilterDoc] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
@@ -12,11 +12,11 @@ const Doctor = () => {
 
   useEffect(() => {
     applyFilter();
-  }, [doctors, speciality]);
+  }, [doctor, speciality]);
   const applyFilter = () => {
     if (speciality) {
-      setFilterDoc(doctors.filter((doc) => doc.speciality === speciality));
-    } else setFilterDoc(doctors);
+      setFilterDoc(doctor.filter((doc) => doc.speciality === speciality));
+    } else setFilterDoc(doctor);
   };
 
   return (

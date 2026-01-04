@@ -5,11 +5,7 @@ import { AppContext } from "../context/AppContext";
 import { useEffect } from "react";
 const TopDoctors = () => {
   const navigate = useNavigate();
-  const { doctors, doctor, getAllDoctor } = useContext(AppContext);
-
-  useEffect(() => {
-    getAllDoctor();
-  }, []);
+  const { doctor, getAllDoctor } = useContext(AppContext);
 
   return (
     <div className="flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10">
@@ -18,9 +14,12 @@ const TopDoctors = () => {
         Simply browse through our extensive list of trusted doctors
       </p>
       <div className="w-full grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 pt-5 gap-y-6 px-3 sm:px-0">
-        {doctor.slice(0, 10).map((item, index) => (
+        {doctor.slice(0, 5).map((item, index) => (
           <div
+            key={index}
             onClick={() => {
+              console.log("td", item);
+
               navigate(`/appointment/${item._id}`);
               scrollTo(0, 0);
             }}
@@ -40,7 +39,7 @@ const TopDoctors = () => {
       </div>
       <button
         onClick={() => {
-          navigate("/doctors");
+          navigate("/doctor");
           scrollTo(0, 0);
         }}
         className="bg-blue-50 text-gray-600 px-12 py-3 rounded-full mt-10"

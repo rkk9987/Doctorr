@@ -62,9 +62,12 @@ const AddDoctor = () => {
         setSpeciality("General Physician");
         setExperience("1 Year");
         setAbout("");
-        setAddress("");
+        setAddress1("");
+        setAddress2("");
       })
       .catch((err) => {
+        setSubmit(false);
+
         console.log(err);
         toast.error(err.response.data.message);
       });

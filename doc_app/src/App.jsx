@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import About from "./Pages/About";
@@ -15,6 +17,7 @@ import Footer from "./Components/Footer";
 function App() {
   return (
     <div className="mx-4 sm:mx-[10%]">
+      <ToastContainer />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

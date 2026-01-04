@@ -5,6 +5,7 @@ const { connectCloudinary } = require("./config/cloudinary");
 const dbConnect = require("./config/mongodb");
 const adminRoute = require("./routes/admin.route");
 const docRouter = require("./routes/doctor.route");
+const useRouter = require("./routes/user.route");
 
 const app = express();
 // api middlewares
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use("/api/admin", adminRoute);
 app.use("/api/doctor", docRouter);
+app.use("/api/user", useRouter);
 
 // start server
 
