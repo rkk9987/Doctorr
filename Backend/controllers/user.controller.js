@@ -3,7 +3,9 @@ const validator = require("validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary").v2;
-
+const doctor = require("../models/Doctor.model");
+const user = require("../models/User.model");
+const appointmentModel = require("../models/appointment.model");
 const userRegister = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -138,9 +140,60 @@ const updateUser = async (req, res) => {
   }
 };
 
+const bookAppointment = async (req, res) => {
+  try {
+    const { userId, docId, slotDate, slotTime } = req.body;
+    const docData = await doctor.findById(docId).select("-password");
+
+    if (!docData.available)
+      return res.json({ success: false, message: "Doctor not available" });
+
+    let slots_booked = docData.slots_booked;
+
+    //checking for slots availability
+
+    if (slots_booked[slotDate]) {
+      if (slots_booked[slotDate].includes(slotTime)) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Slot not available" });
+      } else {
+        slots_booked[slotDate].push(slotTime);
+      }
+    } else {
+      slots_booked[slotDate] = [];
+      slots_booked[slotDate].push(slotTime);
+    }
+
+    const userData = await user.findById(userId).select("-password");
+    delete docData.slots_booked;
+    const appointmentData = {
+      userId,
+      docId,
+      userData,
+      docData,
+      amount: docData.fees,
+      slotTime,
+      slotDate,
+      date: Date.now(),
+    };
+    const newAppointment = new appointmentModel(appointmentData);
+    await newAppointment.save();
+
+    await doctor.findByIdAndUpdate(docId, { slots_booked });
+
+    return res
+      .status(201)
+      .json({ success: true, message: "Appointment Booked" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error });
+  }
+};
+
 module.exports = {
   userRegister,
   userLogin,
   getUserData,
   updateUser,
+  bookAppointment,
 };
