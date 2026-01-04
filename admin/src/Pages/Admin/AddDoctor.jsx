@@ -53,6 +53,16 @@ const AddDoctor = () => {
         console.log(res.data);
         toast.success(res.data.message);
         setSubmit(false);
+        setName("");
+        setEmail("");
+        setPassword("");
+        setEducation("");
+        setFees("");
+        setDocImg(null);
+        setSpeciality("General Physician");
+        setExperience("1 Year");
+        setAbout("");
+        setAddress("");
       })
       .catch((err) => {
         console.log(err);

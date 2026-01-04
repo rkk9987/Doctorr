@@ -4,6 +4,7 @@ const cors = require("cors");
 const { connectCloudinary } = require("./config/cloudinary");
 const dbConnect = require("./config/mongodb");
 const adminRoute = require("./routes/admin.route");
+const docRouter = require("./routes/doctor.route");
 
 const app = express();
 // api middlewares
@@ -13,6 +14,7 @@ app.use(express.json());
 // api endpoints
 
 app.use("/api/admin", adminRoute);
+app.use("/api/doctor", docRouter);
 
 // start server
 

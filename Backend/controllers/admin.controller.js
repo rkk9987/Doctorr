@@ -114,7 +114,19 @@ const login = async (req, res) => {
     return res.status(500).json({ sucess: false, message: error });
   }
 };
+
+const allDoctors = async (req, res) => {
+  try {
+    const doctorData = await doctor.find().select("-password");
+    if (doctorData)
+      return res.status(200).json({ success: true, Doctor: doctorData });
+  } catch (error) {
+    return res.status(500).json({ sucess: false, message: error });
+  }
+};
+
 module.exports = {
   addDoctor,
   login,
+  allDoctors,
 };

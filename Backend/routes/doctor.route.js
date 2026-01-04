@@ -1,3 +1,7 @@
-const docRoute = require("express").Router();
+const { doctorlist } = require("../controllers/doctor.controller");
 
-module.exports = docRoute;
+const docRouter = require("express").Router();
+
+docRouter.get("/doctor-list", doctorlist);
+
+module.exports = docRouter;
