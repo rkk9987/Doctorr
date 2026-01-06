@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("cloudinary").v2;
 const doctor = require("../models/Doctor.model");
-const user = require("../models/User.model");
+// const user = require("../models/User.model");
 const appointmentModel = require("../models/appointment.model");
 const userRegister = async (req, res) => {
   try {
@@ -144,7 +144,6 @@ const bookAppointment = async (req, res) => {
   try {
     const { userId, docId, slotDate, slotTime } = req.body;
     const docData = await doctor.findById(docId).select("-password");
-
     if (!docData.available)
       return res.json({ success: false, message: "Doctor not available" });
 
