@@ -4,6 +4,8 @@ const {
   getUserData,
   updateUser,
   bookAppointment,
+  listAppointment,
+  cancelAppointment,
 } = require("../controllers/user.controller");
 const { authUser } = require("../middlewares/user.middleware");
 const upload = require("../middlewares/multer");
@@ -14,5 +16,7 @@ useRouter.post("/login", userLogin);
 useRouter.get("/get-user-data", authUser, getUserData);
 useRouter.post("/update-user", authUser, upload.single("image"), updateUser);
 useRouter.post("/book-appointment", authUser, bookAppointment);
+useRouter.get("/appointments", authUser, listAppointment);
+useRouter.post("/cancel-appointment", authUser, cancelAppointment);
 
 module.exports = useRouter;

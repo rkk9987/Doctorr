@@ -28,6 +28,9 @@ const AppContextProvider = (props) => {
       console.log(error);
     }
   };
+
+  // const getDoctorsData = () => {};
+
   useEffect(() => {
     getAllDoctor();
   }, []);
@@ -52,7 +55,7 @@ const AppContextProvider = (props) => {
     if (uToken) {
       getUserData();
     } else {
-      setUser(false);
+      setUserData(false);
     }
   }, [uToken]);
 
@@ -66,6 +69,7 @@ const AppContextProvider = (props) => {
     userData,
     setUserData,
     getUserData,
+    getAllDoctor,
   };
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>

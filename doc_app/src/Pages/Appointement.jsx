@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets_frontend/assets";
 import RelatedDoctors from "../Components/RelatedDoctors";
-
+import { toast } from "react-toastify";
+import axios from "axios";
 const Appointement = () => {
   const { doc_Id } = useParams();
   // console.log(doc_Id);
-
-  const { doctor, currencySymbol } = useContext(AppContext);
+  const navigate = useNavigate();
+  const { doctor, currencySymbol, uToken, getAllDoctor } =
+    useContext(AppContext);
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   const [docInfo, setDocInfo] = useState(null);
@@ -19,7 +21,7 @@ const Appointement = () => {
   const fetchDocInfo = async () => {
     const docInfo = doctor.find((doc) => doc._id === doc_Id);
     setDocInfo(docInfo);
-    // console.log(docInfo);
+    console.log(docInfo);
   };
 
   const getAvailableSlots = async () => {
@@ -66,10 +68,32 @@ const Appointement = () => {
           minute: "2-digit",
         });
 
-        timeSlots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime,
-        });
+        let day = currentDate.getDate();
+        let month = currentDate.getMonth();
+        let year = currentDate.getFullYear();
+
+        const slotDate = day + "_" + month + "_" + year;
+        const slotTime = formattedTime;
+
+        // const isSlotAvailable =
+        //   docInfo.slots_booked[slotDate] &&
+        //   docInfo.slots_booked[slotDate].includes(slotTime)
+        //     ? false
+        //     : true;
+        // console.log(docInfo.slots_booked[slotDate]);
+
+        const isSlotAvailable =
+          !docInfo?.slots_booked?.slotDate?.includes(slotTime);
+
+        if (isSlotAvailable) {
+          //add slot to array
+          console.log(isSlotAvailable);
+
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          });
+        }
 
         currentDate.setMinutes(currentDate.getMinutes() + 30);
       }
@@ -133,9 +157,45 @@ const Appointement = () => {
     getAvailableSlots();
   }, [docInfo]);
 
+  const bookAppointment = async () => {
+    // console.log("came");
+
+    if (!uToken) {
+      toast.warn("Login to book appointment");
+      return navigate("/login");
+    }
+
+    try {
+      const date = docSlots[slotIndex][0].datetime;
+
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+
+      const slotDate = day + "_" + month + "_" + year;
+      axios
+        .post(
+          "http://localhost:8001/api/user/book-appointment",
+          { docId: doc_Id, slotDate, slotTime },
+          { headers: { uToken } }
+        )
+        .then((res) => {
+          getAllDoctor();
+          navigate("/my_Appointment");
+          toast.success(res.data.message);
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     console.log(docSlots);
   }, [docSlots]);
+
   return (
     docInfo && (
       <div>
@@ -236,7 +296,10 @@ const Appointement = () => {
                 </p>
               ))}
           </div>
-          <button className="bg-[#5f6fff] text-white text-sm font=light px-14 py-3 rounded-full my-6">
+          <button
+            onClick={bookAppointment}
+            className="bg-[#5f6fff] text-white text-sm font-light px-14 py-3 rounded-full my-6 cursor-pointer"
+          >
             Book an appointment
           </button>
         </div>

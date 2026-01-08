@@ -4,12 +4,17 @@ import { useContext } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { AdminContext } from "../context/AdminContext";
+import { DoctorContext } from "../context/DoctorContext";
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState("Admin");
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const { setAToken, backendUrl } = useContext(AdminContext);
+  const { setDToken } = useContext(DoctorContext);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -28,6 +33,21 @@ const Login = () => {
             toast.error(err.response.data.message);
           });
       } else {
+        // console.log("came");
+
+        axios
+          .post("http://localhost:8001/api/doctor/login", { email, password })
+          .then((res) => {
+            localStorage.setItem("dToken", res.data.dtoken);
+            setDToken(res.data.dtoken);
+            // console.log(res.data);
+            // navigate("/");
+            // toast.success(res.data.message);
+          })
+          .catch((err) => {
+            // console.log(err);
+            toast.error(err.response.data.message);
+          });
       }
     } catch (error) {
       console.log(error);
